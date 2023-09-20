@@ -1,9 +1,14 @@
 package com.hfad.bitsandpizzas;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.ShareActionProvider;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.MenuItemCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,6 +27,9 @@ public class MainActivity extends AppCompatActivity {
         //设置工具条为活动的应用条
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        SectionsPagerAdapter pagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        pager.setAdapter(pagerAdapter);
     }
 
     private void setShareActionIntent(String text) {
@@ -46,13 +54,40 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_create_order:
-                Intent intent = new Intent(this, OrderActivity.class);
-                startActivity(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.action_create_order){
+            Intent intent = new Intent(this, OrderActivity.class);
+            startActivity(intent);
+            return true;
+        }else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        public SectionsPagerAdapter(@NonNull FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public int getCount() {
+            return 4;
+        }
+
+        @NonNull
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    return new TopFragment();
+                case 1:
+                    return new PizzaFragment();
+                case 2:
+                    return new PastaFragment();
+                case 3:
+                    return new StoresFragment();
+            }
+            return null;
         }
     }
 }
